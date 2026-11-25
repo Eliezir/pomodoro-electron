@@ -1,58 +1,103 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, nativeImage } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
+import { Channels, type Session, type Task } from '../shared/types';
+import { Timer, type PhaseEndEvent } from './timer/Timer';
+import { JsonStore } from './storage/JsonStore';
+import { TaskRepository } from './repositories/TaskRepository';
+import { SessionRepository } from './repositories/SessionRepository';
+import { registerTimerHandlers } from './ipc/timerHandlers';
+import { registerTaskHandlers } from './ipc/taskHandlers';
+import { broadcast } from './ipc/broadcast';
+import { createTray } from './menus/tray';
+import { installAppMenu } from './menus/appMenu';
+import { createPhaseEndNotifier } from './notifications';
+import { createMainWindow } from './window';
+import appIcon from '../../assets/app-icon.png?inline';
 
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (started) {
-  app.quit();
+// Tests can keep their data apart from the real app's.
+if (process.env.POMODORO_DATA_DIR)
+  app.setPath('userData', process.env.POMODORO_DATA_DIR);
+
+// Windows installer (Squirrel) runs the app once to create shortcuts; quit right away.
+if (started) app.quit();
+
+// Singleton: only one copy of the app may run. A second launch hands over
+// to the first one (see 'second-instance' below) and quits.
+const isFirstInstance = app.requestSingleInstanceLock();
+if (!isFirstInstance) app.quit();
+
+let mainWindow: BrowserWindow | null = null;
+
+function showWindow() {
+  if (!mainWindow || mainWindow.isDestroyed()) {
+    mainWindow = createMainWindow();
+    return;
+  }
+  if (mainWindow.isMinimized()) mainWindow.restore();
+  mainWindow.show();
+  mainWindow.focus();
 }
 
-const createWindow = () => {
-  // Create the browser window.
-  const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.cjs'),
-    },
+function bootstrap() {
+  // Our own name, credits and icon in "Sobre" and in the Dock.
+  app.setAboutPanelOptions({
+    applicationName: 'Pomodoro',
+    applicationVersion: app.getVersion(),
+    copyright: 'Prova de conceito do seminário de Electron · IFAL Maceió',
+    credits: 'Visual Meadow. Feito com Electron, React, Tailwind e beUI.',
+  });
+  if (process.platform === 'darwin')
+    app.dock?.setIcon(nativeImage.createFromDataURL(appIcon));
+
+  // Data lives in the per-user app folder, e.g. ~/Library/Application Support/Pomodoro.
+  const dataDir = app.getPath('userData');
+  const tasks = new TaskRepository(
+    new JsonStore<Task[]>(path.join(dataDir, 'tasks.json'), () => []),
+  );
+  const sessions = new SessionRepository(
+    new JsonStore<Session[]>(path.join(dataDir, 'sessions.json'), () => []),
+  );
+
+  const timer = new Timer();
+  if (process.env.POMODORO_DEMO === '1') timer.setDemoMode(true);
+
+  // Observer: everyone who cares about the timer subscribes here.
+  timer.on('tick', (snapshot) => broadcast(Channels.timerTick, snapshot));
+  timer.on('phaseEnd', createPhaseEndNotifier(tasks, showWindow));
+  timer.on('phaseEnd', (event: PhaseEndEvent) => {
+    if (event.phase !== 'focus') return;
+    sessions.add({
+      taskId: event.taskId,
+      startedAt: event.startedAt.toISOString(),
+      endedAt: event.endedAt.toISOString(),
+      durationMs: event.durationMs,
+    });
+    if (event.taskId) tasks.addPomodoro(event.taskId);
+    broadcast(Channels.dataChanged);
   });
 
-  // and load the index.html of the app.
-  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-    mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
-  } else {
-    mainWindow.loadFile(
-      path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`),
-    );
-  }
+  registerTimerHandlers(timer, tasks);
+  registerTaskHandlers(tasks, sessions, timer);
+  installAppMenu(timer, tasks, showWindow);
+  createTray(timer, tasks, showWindow);
+  mainWindow = createMainWindow();
+}
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
-};
+if (isFirstInstance) {
+  app.on('second-instance', showWindow);
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
-  createWindow();
-
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
-    }
+  app.whenReady().then(() => {
+    bootstrap();
+    // macOS: clicking the Dock icon with no window open brings one back.
+    app.on('activate', () => {
+      if (BrowserWindow.getAllWindows().length === 0) showWindow();
+    });
   });
-});
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
-});
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
+  // The timer keeps running in the tray, so closing the window does not quit
+  // on macOS. Elsewhere, closing the last window quits, as users expect.
+  app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') app.quit();
+  });
+}
