@@ -1,6 +1,7 @@
 import type { ForgeConfig } from '@electron-forge/shared-types';
 import { MakerSquirrel } from '@electron-forge/maker-squirrel';
 import { MakerZIP } from '@electron-forge/maker-zip';
+import { MakerDMG } from '@electron-forge/maker-dmg';
 import { MakerDeb } from '@electron-forge/maker-deb';
 import { MakerRpm } from '@electron-forge/maker-rpm';
 import { VitePlugin } from '@electron-forge/plugin-vite';
@@ -17,7 +18,17 @@ const config: ForgeConfig = {
   },
   rebuildConfig: {},
   makers: [
-    new MakerSquirrel({ setupIcon: 'assets/icon/icon.ico' }),
+    // Windows: a Setup.exe installer.
+    new MakerSquirrel({
+      setupIcon: 'assets/icon/icon.ico',
+      setupExe: 'Pomodoro-Setup.exe',
+    }),
+    // macOS: a disk image to drag into Applications, plus a zip.
+    new MakerDMG({
+      name: 'Pomodoro',
+      icon: 'assets/icon/icon.icns',
+      format: 'ULFO',
+    }),
     new MakerZIP({}, ['darwin']),
     new MakerRpm({}),
     new MakerDeb({}),

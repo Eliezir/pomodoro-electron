@@ -1,0 +1,172 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      @font-face {
+        font-family: Caprasimo;
+        src: url(../../node_modules/@fontsource/caprasimo/files/caprasimo-latin-400-normal.woff2);
+      }
+      @font-face {
+        font-family: Figtree;
+        src: url(../../node_modules/@fontsource-variable/figtree/files/figtree-latin-wght-normal.woff2);
+        font-weight: 300 900;
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        width: 1280px;
+        height: 720px;
+        overflow: hidden;
+        font-family: Figtree, sans-serif;
+        background:
+          radial-gradient(
+            circle at 78% 18%,
+            rgba(246, 182, 50, 0.28),
+            transparent 38%
+          ),
+          linear-gradient(160deg, #1f3a44 0%, #2c4a3e 55%, #121e18 100%);
+        position: relative;
+      }
+      .grain {
+        position: absolute;
+        inset: 0;
+        opacity: 0.35;
+        mix-blend-mode: overlay;
+      }
+      .copy {
+        position: absolute;
+        left: 72px;
+        top: 0;
+        bottom: 0;
+        width: 470px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        color: #f3eedb;
+      }
+      .copy img {
+        width: 132px;
+        height: 132px;
+        margin: 0 0 6px -14px;
+      }
+      h1 {
+        font:
+          400 76px/1 Caprasimo,
+          serif;
+        margin: 0;
+        letter-spacing: -0.01em;
+      }
+      h1 i {
+        font-style: normal;
+        color: #f6b632;
+      }
+      p {
+        font-size: 22px;
+        line-height: 1.45;
+        color: #bccab6;
+        margin: 18px 0 0;
+        font-weight: 500;
+      }
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 26px;
+      }
+      .tags span {
+        font-size: 15px;
+        font-weight: 700;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(243, 238, 219, 0.1);
+        color: #f3eedb;
+      }
+      .tags span.gold {
+        background: #f6b632;
+        color: #2b1b00;
+      }
+      .win {
+        position: absolute;
+        width: 330px;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow:
+          0 30px 60px -18px rgba(0, 0, 0, 0.6),
+          0 0 0 1px rgba(255, 255, 255, 0.08);
+      }
+      .win img {
+        display: block;
+        width: 100%;
+      }
+      .win .lights {
+        position: absolute;
+        left: 13px;
+        top: 12px;
+        display: flex;
+        gap: 6px;
+      }
+      .win .lights b {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+      }
+      .w1 {
+        left: 560px;
+        top: 64px;
+        transform: rotate(-3deg);
+        z-index: 2;
+      }
+      .w2 {
+        left: 915px;
+        top: 96px;
+        transform: rotate(3.5deg);
+      }
+    </style>
+  </head>
+  <body>
+    <svg class="grain" width="1280" height="720">
+      <filter id="g">
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency="0.01 0.04"
+          numOctaves="4"
+          seed="8"
+        />
+        <feDiffuseLighting surfaceScale="3" lighting-color="#fff">
+          <feDistantLight azimuth="225" elevation="40" />
+        </feDiffuseLighting>
+      </filter>
+      <rect width="1280" height="720" filter="url(#g)" />
+    </svg>
+    <div class="copy">
+      <img src="../../assets/icon/icon.png" alt="" />
+      <h1>Pomodoro<i>.</i></h1>
+      <p>
+        Um timer pomodoro com tarefas, feito com Electron como prova de conceito
+        para um seminário de frameworks.
+      </p>
+      <div class="tags">
+        <span class="gold">Electron 45</span><span>React</span
+        ><span>TypeScript</span><span>Tailwind</span
+        ><span>macOS · Windows</span>
+      </div>
+    </div>
+    <div class="win w1">
+      <img src="../images/screen-focus-dark.png" alt="" />
+      <div class="lights">
+        <b style="background: #ff5f57"></b><b style="background: #febc2e"></b
+        ><b style="background: #28c840"></b>
+      </div>
+    </div>
+    <div class="win w2">
+      <img src="../images/screen-break-light.png" alt="" />
+      <div class="lights">
+        <b style="background: #ff5f57"></b><b style="background: #febc2e"></b
+        ><b style="background: #28c840"></b>
+      </div>
+    </div>
+  </body>
+</html>
