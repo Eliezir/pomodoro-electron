@@ -10,10 +10,14 @@ import { FuseV1Options, FuseVersion } from '@electron/fuses';
 const config: ForgeConfig = {
   packagerConfig: {
     asar: true,
+    name: 'Pomodoro',
+    // Forge picks icon.icns on macOS and icon.ico on Windows.
+    icon: 'assets/icon/icon',
+    appBundleId: 'br.edu.ifal.seminario.pomodoro',
   },
   rebuildConfig: {},
   makers: [
-    new MakerSquirrel({}),
+    new MakerSquirrel({ setupIcon: 'assets/icon/icon.ico' }),
     new MakerZIP({}, ['darwin']),
     new MakerRpm({}),
     new MakerDeb({}),

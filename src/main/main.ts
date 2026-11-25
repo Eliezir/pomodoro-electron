@@ -13,7 +13,7 @@ import { createTray } from './menus/tray';
 import { installAppMenu } from './menus/appMenu';
 import { createPhaseEndNotifier } from './notifications';
 import { createMainWindow } from './window';
-import appIcon from '../../assets/app-icon.png?inline';
+import appIcon from '../../assets/icon/icon.png?inline';
 
 // Tests can keep their data apart from the real app's.
 if (process.env.POMODORO_DATA_DIR)

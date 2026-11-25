@@ -7,7 +7,7 @@ import { formatClock } from '../format';
 import { menuStateKey, timerItems } from './timerItems';
 import trayIcon1x from '../../../assets/trayTemplate.png?inline';
 import trayIcon2x from '../../../assets/trayTemplate@2x.png?inline';
-import appIcon from '../../../assets/app-icon.png?inline';
+import appIcon from '../../../assets/icon/icon.png?inline';
 
 function createTrayImage() {
   if (process.platform !== 'darwin') {

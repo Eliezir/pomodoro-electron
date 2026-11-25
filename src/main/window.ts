@@ -1,13 +1,18 @@
 import { BrowserWindow, nativeImage } from 'electron';
 import path from 'node:path';
-import appIcon from '../../assets/app-icon.png?inline';
+import appIcon from '../../assets/icon/icon.png?inline';
+
+const WIDTH = 440;
+const HEIGHT = 800;
 
 export function createMainWindow() {
   const window = new BrowserWindow({
-    width: 440,
-    height: 820,
-    minWidth: 380,
-    minHeight: 600,
+    // A fixed size: the layout is designed for exactly this window.
+    width: WIDTH,
+    height: HEIGHT,
+    resizable: false,
+    maximizable: false,
+    fullscreenable: false,
     show: false,
     title: 'Pomodoro',
     backgroundColor: '#121e18',

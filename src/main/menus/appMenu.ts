@@ -69,8 +69,6 @@ function buildTemplate(
         { role: 'resetZoom', label: 'Tamanho original' },
         { role: 'zoomIn', label: 'Aumentar' },
         { role: 'zoomOut', label: 'Diminuir' },
-        { type: 'separator' },
-        { role: 'togglefullscreen', label: 'Tela cheia' },
       ],
     },
     {
@@ -78,7 +76,6 @@ function buildTemplate(
       role: 'window',
       submenu: [
         { role: 'minimize', label: 'Minimizar' },
-        ...(isMac ? [{ role: 'zoom' as const, label: 'Zoom' }] : []),
         { role: 'close', label: 'Fechar' },
         ...(isMac
           ? [

@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- Pomodoro app icon, Meadow style: the sun over the hills is a tomato.
+       macOS grid: an 824 px rounded square centred on a 1024 px canvas. -->
+  <defs>
+    <clipPath id="shape">
+      <rect x="100" y="100" width="824" height="824" rx="186" ry="186"/>
+    </clipPath>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1f3a44"/>
+      <stop offset="1" stop-color="#6f8f74"/>
+    </linearGradient>
+    <radialGradient id="glow">
+      <stop offset="0" stop-color="#f6b632" stop-opacity=".6"/>
+      <stop offset="1" stop-color="#f6b632" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="tomato" cx=".38" cy=".34" r=".75">
+      <stop offset="0" stop-color="#ff8a6b"/>
+      <stop offset=".55" stop-color="#ec5a3f"/>
+      <stop offset="1" stop-color="#c7402c"/>
+    </radialGradient>
+    <filter id="paint" x="-6%" y="-10%" width="112%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012 0.04" numOctaves="3" seed="3" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="26" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="soft" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03 0.08" numOctaves="2" seed="9" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="10" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.008 0.03" numOctaves="4" seed="8" result="n"/>
+      <feDiffuseLighting in="n" surfaceScale="3" lighting-color="#ffffff">
+        <feDistantLight azimuth="225" elevation="40"/>
+      </feDiffuseLighting>
+    </filter>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="125%">
+      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#000" flood-opacity=".32"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#shadow)">
+    <g clip-path="url(#shape)">
+      <rect x="100" y="100" width="824" height="824" fill="url(#sky)"/>
+
+      <!-- the sun's path, as on the timer screen -->
+      <path d="M180 650 Q512 60 844 650" fill="none" stroke="#f6b632" stroke-opacity=".45"
+            stroke-width="10" stroke-dasharray="4 30" stroke-linecap="round"/>
+
+      <!-- the tomato sun -->
+      <circle cx="512" cy="430" r="300" fill="url(#glow)"/>
+      <g filter="url(#soft)">
+        <ellipse cx="512" cy="440" rx="168" ry="150" fill="url(#tomato)"/>
+        <ellipse cx="452" cy="390" rx="46" ry="26" fill="#ffffff" fill-opacity=".28" transform="rotate(-24 452 390)"/>
+        <!-- calyx: a five-point green star with a stem -->
+        <path d="M512 300 L540 262 L548 306 L596 296 L560 326 L594 356 L546 344 L534 388 L512 348 L490 388 L478 344 L430 356 L464 326 L428 296 L476 306 L484 262 Z"
+              fill="#3f8a3a"/>
+        <path d="M512 306 C512 270 520 240 538 220" stroke="#2f6e2c" stroke-width="16" stroke-linecap="round" fill="none"/>
+      </g>
+
+      <!-- hills and field -->
+      <g filter="url(#paint)">
+        <path d="M60 690 C230 540 380 560 520 680 L520 960 L60 960 Z" fill="#3b5f47"/>
+        <path d="M380 730 C540 610 680 620 800 720 L800 960 L380 960 Z" fill="#26452f"/>
+        <path d="M600 760 C740 640 860 610 980 640 L980 960 L600 960 Z" fill="#13281b"/>
+        <rect x="60" y="780" width="920" height="200" fill="#2c5130"/>
+      </g>
+
+      <!-- a few wildflowers -->
+      <g fill-opacity=".9">
+        <ellipse cx="230" cy="840" rx="9" ry="15" fill="#f6b632"/>
+        <ellipse cx="320" cy="872" rx="8" ry="14" fill="#e8e2cf"/>
+        <ellipse cx="430" cy="828" rx="8" ry="14" fill="#b6a8ee"/>
+        <ellipse cx="560" cy="866" rx="9" ry="15" fill="#f6b632"/>
+        <ellipse cx="690" cy="836" rx="8" ry="14" fill="#d98aa0"/>
+        <ellipse cx="790" cy="878" rx="9" ry="15" fill="#e8e2cf"/>
+        <ellipse cx="170" cy="890" rx="8" ry="13" fill="#d98aa0"/>
+        <ellipse cx="870" cy="830" rx="8" ry="13" fill="#f6b632"/>
+      </g>
+
+      <rect x="100" y="100" width="824" height="824" filter="url(#grain)" opacity=".28" style="mix-blend-mode:overlay"/>
+    </g>
+  </g>
+</svg>
