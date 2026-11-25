@@ -116,15 +116,23 @@ export function IpcMonitor() {
                 >
                   {toMain ? '→' : '←'}
                 </b>
-                <span className="min-w-0 truncate">
-                  <span className="font-semibold">{e.channel}</span>
-                  <span className="text-muted-foreground">
-                    {' '}
-                    · {KIND_LABEL[e.kind]}
+                <span className="min-w-0">
+                  <span className="block truncate">
+                    <span className="font-semibold">{e.channel}</span>
+                    <span className="text-muted-foreground">
+                      {' '}
+                      · {KIND_LABEL[e.kind]}
+                    </span>
+                    {e.summary !== '—' && (
+                      <span className="text-[var(--text-2)]"> {e.summary}</span>
+                    )}
                   </span>
-                  {e.summary !== '—' && (
-                    <span className="text-[var(--text-2)]"> {e.summary}</span>
-                  )}
+                  <span
+                    className="mt-0.5 inline-block rounded bg-[var(--raised)] px-1.5 text-[11px] text-muted-foreground"
+                    title="API do Electron que levou a mensagem"
+                  >
+                    {e.api}
+                  </span>
                 </span>
               </li>
             );

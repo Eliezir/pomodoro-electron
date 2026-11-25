@@ -58,6 +58,7 @@ export function handle(
     logIpc({
       direction: 'to-main',
       kind: 'invoke',
+      api: 'ipcRenderer.invoke → ipcMain.handle',
       channel,
       // One argument is shown as itself, several as a list, none as "—".
       summary: summarize(args.length > 1 ? args : args[0]),
@@ -67,6 +68,7 @@ export function handle(
       logIpc({
         direction: 'to-renderer',
         kind: 'reply',
+        api: 'ipcMain.handle → invoke (Promise)',
         channel,
         summary: summarize(result),
       });
@@ -75,6 +77,7 @@ export function handle(
       logIpc({
         direction: 'to-renderer',
         kind: 'error',
+        api: 'ipcMain.handle → invoke (rejeitada)',
         channel,
         summary: (error as Error).message,
       });

@@ -7,6 +7,7 @@ export function broadcast(channel: string, ...args: unknown[]) {
   logIpc({
     direction: 'to-renderer',
     kind: 'event',
+    api: 'webContents.send → ipcRenderer.on',
     channel,
     summary: summarize(args.length ? args[0] : undefined),
   });

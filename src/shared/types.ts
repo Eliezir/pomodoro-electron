@@ -47,6 +47,8 @@ export interface IpcLogEntry {
   direction: 'to-main' | 'to-renderer';
   /** invoke: a request; reply: its answer; event: a one-way message; error: a failed request. */
   kind: 'invoke' | 'reply' | 'event' | 'error';
+  /** The Electron API pair that carried the message, e.g. 'invoke → handle'. */
+  api: string;
   channel: string;
   summary: string;
 }

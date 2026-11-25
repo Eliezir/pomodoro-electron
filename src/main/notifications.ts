@@ -18,7 +18,10 @@ export function createPhaseEndNotifier(
   showWindow: () => void,
 ) {
   return (event: PhaseEndEvent) => {
-    if (!Notification.isSupported()) return;
+    if (!Notification.isSupported()) {
+      console.warn('[notification] not supported on this system');
+      return;
+    }
     const message = MESSAGES[event.next];
     const task =
       event.phase === 'focus' && event.taskId
@@ -30,6 +33,10 @@ export function createPhaseEndNotifier(
       body: task ? `${message.body} (${task.title})` : message.body,
     });
     notification.on('click', showWindow);
+    notification.on('show', () => console.info('[notification] shown'));
+    notification.on('failed', (_event, error) =>
+      console.warn('[notification] failed:', error),
+    );
     notification.show();
   };
 }
