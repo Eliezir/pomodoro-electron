@@ -1,5 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
-  <!-- Pomodoro app icon, Meadow style: the sun over the hills is a tomato.
+  <!-- Pomodoro app icon, Meadow style: the dino in the field, with the
+       tomato sun rising behind the hills.
        macOS grid: an 824 px rounded square centred on a 1024 px canvas. -->
   <defs>
     <clipPath id="shape">
@@ -26,6 +27,16 @@
       <feTurbulence type="fractalNoise" baseFrequency="0.03 0.08" numOctaves="2" seed="9" result="n"/>
       <feDisplacementMap in="SourceGraphic" in2="n" scale="10" xChannelSelector="R" yChannelSelector="G"/>
     </filter>
+    <filter id="dino-paint" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.05 0.14" numOctaves="3" seed="11" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="4" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.11 0.035" numOctaves="3" seed="4" result="n2"/>
+      <feDiffuseLighting in="n2" surfaceScale="2.4" lighting-color="#ffffff" result="l">
+        <feDistantLight azimuth="235" elevation="52"/>
+      </feDiffuseLighting>
+      <feComposite in="l" in2="d" operator="in" result="lt"/>
+      <feBlend in="lt" in2="d" mode="soft-light"/>
+    </filter>
     <filter id="grain" x="0" y="0" width="100%" height="100%">
       <feTurbulence type="fractalNoise" baseFrequency="0.008 0.03" numOctaves="4" seed="8" result="n"/>
       <feDiffuseLighting in="n" surfaceScale="3" lighting-color="#ffffff">
@@ -42,38 +53,82 @@
       <rect x="100" y="100" width="824" height="824" fill="url(#sky)"/>
 
       <!-- the sun's path, as on the timer screen -->
-      <path d="M180 650 Q512 60 844 650" fill="none" stroke="#f6b632" stroke-opacity=".45"
+      <path d="M150 640 Q420 120 700 520" fill="none" stroke="#f6b632" stroke-opacity=".45"
             stroke-width="10" stroke-dasharray="4 30" stroke-linecap="round"/>
 
       <!-- the tomato sun -->
-      <circle cx="512" cy="430" r="300" fill="url(#glow)"/>
+      <circle cx="330" cy="350" r="230" fill="url(#glow)"/>
       <g filter="url(#soft)">
-        <ellipse cx="512" cy="440" rx="168" ry="150" fill="url(#tomato)"/>
-        <ellipse cx="452" cy="390" rx="46" ry="26" fill="#ffffff" fill-opacity=".28" transform="rotate(-24 452 390)"/>
-        <!-- calyx: a five-point green star with a stem -->
-        <path d="M512 300 L540 262 L548 306 L596 296 L560 326 L594 356 L546 344 L534 388 L512 348 L490 388 L478 344 L430 356 L464 326 L428 296 L476 306 L484 262 Z"
-              fill="#3f8a3a"/>
-        <path d="M512 306 C512 270 520 240 538 220" stroke="#2f6e2c" stroke-width="16" stroke-linecap="round" fill="none"/>
+        <ellipse cx="330" cy="356" rx="104" ry="94" fill="url(#tomato)"/>
+        <ellipse cx="294" cy="326" rx="28" ry="16" fill="#ffffff" fill-opacity=".28" transform="rotate(-24 294 326)"/>
+        <path d="M330 270 L347 247 L352 274 L381 268 L359 286 L380 304 L351 297 L343 324 L330 299 L317 324 L309 297 L280 304 L301 286 L279 268 L308 274 L313 247 Z" fill="#3f8a3a"/>
+        <path d="M330 274 C330 252 335 234 346 222" stroke="#2f6e2c" stroke-width="10" stroke-linecap="round" fill="none"/>
       </g>
 
       <!-- hills and field -->
       <g filter="url(#paint)">
-        <path d="M60 690 C230 540 380 560 520 680 L520 960 L60 960 Z" fill="#3b5f47"/>
-        <path d="M380 730 C540 610 680 620 800 720 L800 960 L380 960 Z" fill="#26452f"/>
-        <path d="M600 760 C740 640 860 610 980 640 L980 960 L600 960 Z" fill="#13281b"/>
-        <rect x="60" y="780" width="920" height="200" fill="#2c5130"/>
+        <path d="M60 680 C230 530 380 550 520 670 L520 960 L60 960 Z" fill="#3b5f47"/>
+        <path d="M380 720 C540 600 680 610 800 710 L800 960 L380 960 Z" fill="#26452f"/>
+        <path d="M600 750 C740 630 860 600 980 630 L980 960 L600 960 Z" fill="#13281b"/>
+        <rect x="60" y="770" width="920" height="210" fill="#2c5130"/>
       </g>
 
-      <!-- a few wildflowers -->
+      <!-- wildflowers behind the dino -->
       <g fill-opacity=".9">
-        <ellipse cx="230" cy="840" rx="9" ry="15" fill="#f6b632"/>
-        <ellipse cx="320" cy="872" rx="8" ry="14" fill="#e8e2cf"/>
-        <ellipse cx="430" cy="828" rx="8" ry="14" fill="#b6a8ee"/>
-        <ellipse cx="560" cy="866" rx="9" ry="15" fill="#f6b632"/>
-        <ellipse cx="690" cy="836" rx="8" ry="14" fill="#d98aa0"/>
-        <ellipse cx="790" cy="878" rx="9" ry="15" fill="#e8e2cf"/>
-        <ellipse cx="170" cy="890" rx="8" ry="13" fill="#d98aa0"/>
-        <ellipse cx="870" cy="830" rx="8" ry="13" fill="#f6b632"/>
+        <ellipse cx="170" cy="820" rx="9" ry="15" fill="#f6b632"/>
+        <ellipse cx="240" cy="866" rx="8" ry="14" fill="#e8e2cf"/>
+        <ellipse cx="320" cy="812" rx="8" ry="14" fill="#b6a8ee"/>
+        <ellipse cx="200" cy="900" rx="8" ry="13" fill="#d98aa0"/>
+        <ellipse cx="880" cy="840" rx="8" ry="13" fill="#f6b632"/>
+        <ellipse cx="900" cy="900" rx="8" ry="13" fill="#e8e2cf"/>
+      </g>
+
+      <!-- the Meadow dino (same layers as the app's Dino component), happy pose -->
+      <g transform="translate(318 300) scale(2.75)">
+        <g filter="url(#dino-paint)">
+          <ellipse cx="108" cy="208" rx="62" ry="7" fill="#000" opacity=".22"/>
+          <path d="M74 146 C48 148 24 160 8 180 C34 186 62 182 86 172Z" fill="#2fae7f"/>
+          <g fill="#ffbb2c">
+            <path d="M-12 0C-12 -18 -4.2 -25.8 3 -25.2C11.4 -24 12 -13.2 12 0Z" transform="translate(92 26) rotate(-22)"/>
+            <path d="M-12 0C-12 -18 -4.2 -25.8 3 -25.2C11.4 -24 12 -13.2 12 0Z" transform="translate(74 38) rotate(-50)"/>
+            <path d="M-11.5 0C-11.5 -17.25 -4.025 -24.725 2.875 -24.15C10.925 -23 11.5 -12.65 11.5 0Z" transform="translate(64 62) rotate(-78)"/>
+            <path d="M-11 0C-11 -16.5 -3.85 -23.65 2.75 -23.1C10.45 -22 11 -12.1 11 0Z" transform="translate(60 90) rotate(-90)"/>
+            <path d="M-10.5 0C-10.5 -15.75 -3.675 -22.575 2.625 -22.05C9.975 -21 10.5 -11.55 10.5 0Z" transform="translate(60 118) rotate(-98)"/>
+            <path d="M-9.5 0C-9.5 -14.25 -3.325 -20.425 2.375 -19.95C9.025 -19 9.5 -10.45 9.5 0Z" transform="translate(62 144) rotate(-112)"/>
+            <path d="M-8.5 0C-8.5 -12.75 -2.975 -18.275 2.125 -17.85C8.075 -17 8.5 -9.35 8.5 0Z" transform="translate(44 158) rotate(-140)"/>
+            <path d="M-7 0C-7 -10.5 -2.45 -15.05 1.75 -14.7C6.65 -14 7 -7.7 7 0Z" transform="translate(26 167) rotate(-155)"/>
+          </g>
+          <path d="M62 124 C60 86 84 70 112 72 C142 74 160 100 158 140 C156 182 136 202 108 202 C80 202 64 170 62 124Z" fill="#2fae7f"/>
+          <ellipse cx="86" cy="198" rx="19" ry="11" fill="#2fae7f"/>
+          <ellipse cx="132" cy="199" rx="19" ry="10" fill="#2fae7f"/>
+          <g fill="#f6f4ea">
+            <ellipse cx="76" cy="205" rx="4.5" ry="3.5"/><ellipse cx="86" cy="206" rx="4.5" ry="3.5"/><ellipse cx="96" cy="205" rx="4.5" ry="3.5"/>
+            <ellipse cx="124" cy="206" rx="4.5" ry="3.5"/><ellipse cx="134" cy="207" rx="4.5" ry="3.5"/><ellipse cx="144" cy="206" rx="4.5" ry="3.5"/>
+          </g>
+          <path d="M94 98 C114 90 142 102 144 136 C146 176 130 196 110 196 C92 196 84 172 84 140 C84 118 86 104 94 98Z" fill="#c3f1d2"/>
+          <g fill="#1f8a62"><circle cx="72" cy="118" r="7"/><circle cx="76" cy="146" r="5"/><circle cx="70" cy="96" r="4"/></g>
+          <path d="M96 128 C102 138 114 140 122 132" stroke="#25946a" stroke-width="13" stroke-linecap="round" fill="none"/>
+          <path d="M70 58 C70 30 92 16 116 18 C138 20 146 30 154 38 C176 38 198 50 198 66 C198 86 176 96 150 96 C126 98 104 98 90 92 C76 86 70 74 70 58Z" fill="#2fae7f"/>
+          <path d="M98 78 C120 88 162 90 192 74 C190 88 172 98 148 99 C124 100 106 94 98 78Z" fill="#c3f1d2"/>
+          <g fill="#1f8a62"><circle cx="84" cy="50" r="6"/><circle cx="96" cy="32" r="4"/><circle cx="80" cy="70" r="4"/></g>
+          <g fill="none" stroke="#0b2a1f" stroke-width="4.5" stroke-linecap="round">
+            <path d="M100 50 Q109 40 118 50"/><path d="M128 46 Q136 37 144 46"/>
+          </g>
+          <ellipse cx="184" cy="56" rx="3" ry="2.4" fill="#0b2a1f"/>
+          <path d="M116 72 Q150 90 186 70" stroke="#0b2a1f" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <path d="M136 122 C154 120 168 114 178 106" stroke="#2fae7f" stroke-width="17" stroke-linecap="round" fill="none"/>
+          <circle cx="182" cy="102" r="12.5" fill="#2fae7f"/>
+          <g fill="#ffbb2c">
+            <rect x="186" y="18" width="7" height="22" rx="3.5" transform="rotate(18 189 29)"/>
+            <rect x="198" y="40" width="7" height="18" rx="3.5" transform="rotate(52 201 49)"/>
+          </g>
+        </g>
+      </g>
+
+      <!-- grass in front of the dino's feet -->
+      <g stroke-linecap="round" fill="none">
+        <path d="M120 940 q6 -40 18 -70 M160 950 q-4 -44 10 -82 M420 950 q4 -40 -6 -76 M470 950 q6 -46 20 -80 M560 955 q-6 -40 6 -74 M760 950 q4 -40 -8 -78 M820 955 q8 -42 22 -74 M880 955 q-4 -36 6 -66" stroke="#376440" stroke-width="10"/>
+        <path d="M140 950 q2 -30 -8 -56 M440 955 q2 -34 12 -60 M600 958 q4 -32 -6 -58 M790 955 q2 -30 12 -54" stroke="#44724a" stroke-width="9"/>
       </g>
 
       <rect x="100" y="100" width="824" height="824" filter="url(#grain)" opacity=".28" style="mix-blend-mode:overlay"/>
