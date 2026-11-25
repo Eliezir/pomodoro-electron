@@ -13,6 +13,7 @@ function buildTemplate(
   timer: Timer,
   tasks: TaskRepository,
   showWindow: () => void,
+  openIpcMonitor: () => void,
 ): MenuItemConstructorOptions[] {
   const name = app.name;
 
@@ -65,6 +66,11 @@ function buildTemplate(
       submenu: [
         { role: 'reload', label: 'Recarregar' },
         { role: 'toggleDevTools', label: 'Ferramentas do desenvolvedor' },
+        {
+          label: 'Monitor de IPC',
+          accelerator: 'CmdOrCtrl+Alt+M',
+          click: openIpcMonitor,
+        },
         { type: 'separator' },
         { role: 'resetZoom', label: 'Tamanho original' },
         { role: 'zoomIn', label: 'Aumentar' },
@@ -121,12 +127,15 @@ export function installAppMenu(
   timer: Timer,
   tasks: TaskRepository,
   showWindow: () => void,
+  openIpcMonitor: () => void,
 ) {
   let lastKey = '';
   const rebuild = () => {
     lastKey = menuStateKey(timer);
     Menu.setApplicationMenu(
-      Menu.buildFromTemplate(buildTemplate(timer, tasks, showWindow)),
+      Menu.buildFromTemplate(
+        buildTemplate(timer, tasks, showWindow, openIpcMonitor),
+      ),
     );
   };
 

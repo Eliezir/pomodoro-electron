@@ -38,6 +38,19 @@ export interface TodayStats {
   focusMs: number;
 }
 
+/** One IPC message, as shown in the "Monitor de IPC" window. */
+export interface IpcLogEntry {
+  id: number;
+  /** Epoch milliseconds. */
+  at: number;
+  /** 'to-main': renderer → main. 'to-renderer': main → renderer. */
+  direction: 'to-main' | 'to-renderer';
+  /** invoke: a request; reply: its answer; event: a one-way message; error: a failed request. */
+  kind: 'invoke' | 'reply' | 'event' | 'error';
+  channel: string;
+  summary: string;
+}
+
 /** The API the preload script exposes to the renderer as `window.pomodoro`. */
 export interface PomodoroApi {
   /** 'darwin', 'win32' or 'linux', so the page can leave room for window controls. */
@@ -65,6 +78,10 @@ export interface PomodoroApi {
   };
   /** Called when tasks or sessions change in the main process. */
   onDataChanged(listener: () => void): () => void;
+  /** Used only by the "Monitor de IPC" window. */
+  ipcMonitor: {
+    onEntry(listener: (entry: IpcLogEntry) => void): () => void;
+  };
 }
 
 /** IPC channel names, kept in one place so both sides agree. */
@@ -84,4 +101,5 @@ export const Channels = {
   tasksRemove: 'tasks:remove',
   statsToday: 'stats:today',
   dataChanged: 'data:changed',
+  ipcLog: 'ipc:log',
 } as const;

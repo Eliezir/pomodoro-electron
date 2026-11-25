@@ -1,6 +1,7 @@
 import { contextBridge, ipcRenderer, type IpcRendererEvent } from 'electron';
 import {
   Channels,
+  type IpcLogEntry,
   type PomodoroApi,
   type TimerSnapshot,
 } from '../shared/types';
@@ -49,6 +50,9 @@ const api: PomodoroApi = {
     today: () => ipcRenderer.invoke(Channels.statsToday),
   },
   onDataChanged: (listener) => subscribe(Channels.dataChanged, listener),
+  ipcMonitor: {
+    onEntry: (listener) => subscribe<[IpcLogEntry]>(Channels.ipcLog, listener),
+  },
 };
 
 contextBridge.exposeInMainWorld('pomodoro', api);

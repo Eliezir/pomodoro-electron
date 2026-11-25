@@ -13,6 +13,7 @@ import { createTray } from './menus/tray';
 import { installAppMenu } from './menus/appMenu';
 import { createPhaseEndNotifier } from './notifications';
 import { createMainWindow } from './window';
+import { openIpcMonitor } from './ipcMonitorWindow';
 import appIcon from '../../assets/icon/icon.png?inline';
 
 // Tests can keep their data apart from the real app's.
@@ -79,9 +80,13 @@ function bootstrap() {
 
   registerTimerHandlers(timer, tasks);
   registerTaskHandlers(tasks, sessions, timer);
-  installAppMenu(timer, tasks, showWindow);
+  installAppMenu(timer, tasks, showWindow, () => openIpcMonitor(mainWindow));
   createTray(timer, tasks, showWindow);
   mainWindow = createMainWindow();
+  // The IPC monitor can open at startup for the presentation.
+  if (process.env.POMODORO_IPC_MONITOR === '1') {
+    mainWindow.once('ready-to-show', () => openIpcMonitor(mainWindow));
+  }
 }
 
 if (isFirstInstance) {

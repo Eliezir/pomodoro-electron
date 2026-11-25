@@ -57,6 +57,7 @@ O topo é uma paisagem pintada em que **o céu é o relógio**: o sol percorre o
 - **O timer continua com a janela fechada**, porque ele vive no processo principal.
 - **Modo demonstração** (Timer › Modo demonstração): 20 s de foco, 5 s de pausa e 10 s de pausa longa, para apresentar o ciclo inteiro em poucos segundos.
 - **Tema claro e escuro** seguindo o sistema.
+- **Monitor de IPC** (Ver › Monitor de IPC, ⌘⌥M): uma segunda janela que lista ao vivo cada mensagem entre a tela e o processo principal (→ pedidos, ← respostas e eventos como o `timer:tick`).
 
 ## Como o Electron aparece no código
 
@@ -104,6 +105,8 @@ sequenceDiagram
   end
   T-->>S: emit('phaseEnd') · notificação + sessão salva no JSON
 ```
+
+<p align="center"><img src="docs/images/screen-ipc-monitor.png" alt="Monitor de IPC mostrando timer:start, a resposta e os timer:tick" width="420"></p>
 
 ### APIs do Electron usadas
 
@@ -172,7 +175,7 @@ pnpm start          # abre o app em modo de desenvolvimento
 | `pnpm lint` · `pnpm typecheck` | Verificações                                                         |
 | `./scripts/build-icons.sh`     | Gera `icon.png`, `.icns` e `.ico` a partir de `assets/icon/icon.svg` |
 
-Variáveis úteis em desenvolvimento: `POMODORO_DEMO=1` começa no modo demonstração e `POMODORO_DATA_DIR=/algum/lugar` guarda os dados numa pasta separada.
+Variáveis úteis em desenvolvimento: `POMODORO_DEMO=1` começa no modo demonstração, `POMODORO_IPC_MONITOR=1` já abre o Monitor de IPC e `POMODORO_DATA_DIR=/algum/lugar` guarda os dados numa pasta separada.
 
 ## Integração contínua
 

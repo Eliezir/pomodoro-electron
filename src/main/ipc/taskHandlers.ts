@@ -1,4 +1,4 @@
-import { ipcMain } from 'electron';
+import { handle } from './ipcLog';
 import { Channels } from '../../shared/types';
 import type { TaskRepository } from '../repositories/TaskRepository';
 import type { SessionRepository } from '../repositories/SessionRepository';
@@ -27,40 +27,34 @@ export function registerTaskHandlers(
 ) {
   const changed = () => broadcast(Channels.dataChanged);
 
-  ipcMain.handle(Channels.tasksList, () => tasks.list());
+  handle(Channels.tasksList, () => tasks.list());
 
-  ipcMain.handle(Channels.tasksCreate, (_event, title: unknown) => {
+  handle(Channels.tasksCreate, (_event, title: unknown) => {
     const task = tasks.create(parseTitle(title));
     changed();
     return task;
   });
 
-  ipcMain.handle(
-    Channels.tasksRename,
-    (_event, id: unknown, title: unknown) => {
-      const task = tasks.update(parseId(id), { title: parseTitle(title) });
-      changed();
-      return task;
-    },
-  );
+  handle(Channels.tasksRename, (_event, id: unknown, title: unknown) => {
+    const task = tasks.update(parseId(id), { title: parseTitle(title) });
+    changed();
+    return task;
+  });
 
-  ipcMain.handle(
-    Channels.tasksSetDone,
-    (_event, id: unknown, done: unknown) => {
-      const task = tasks.update(parseId(id), { done: done === true });
-      if (task.done && timer.snapshot().activeTaskId === task.id)
-        timer.setActiveTask(null);
-      changed();
-      return task;
-    },
-  );
+  handle(Channels.tasksSetDone, (_event, id: unknown, done: unknown) => {
+    const task = tasks.update(parseId(id), { done: done === true });
+    if (task.done && timer.snapshot().activeTaskId === task.id)
+      timer.setActiveTask(null);
+    changed();
+    return task;
+  });
 
-  ipcMain.handle(Channels.tasksRemove, (_event, id: unknown) => {
+  handle(Channels.tasksRemove, (_event, id: unknown) => {
     const taskId = parseId(id);
     tasks.remove(taskId);
     if (timer.snapshot().activeTaskId === taskId) timer.setActiveTask(null);
     changed();
   });
 
-  ipcMain.handle(Channels.statsToday, () => sessions.statsFor(new Date()));
+  handle(Channels.statsToday, () => sessions.statsFor(new Date()));
 }
