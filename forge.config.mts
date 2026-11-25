@@ -7,6 +7,8 @@ import { MakerRpm } from '@electron-forge/maker-rpm';
 import { VitePlugin } from '@electron-forge/plugin-vite';
 import { FusesPlugin } from '@electron-forge/plugin-fuses';
 import { FuseV1Options, FuseVersion } from '@electron/fuses';
+import { execFileSync } from 'node:child_process';
+import path from 'node:path';
 
 const config: ForgeConfig = {
   packagerConfig: {
@@ -69,6 +71,25 @@ const config: ForgeConfig = {
       [FuseV1Options.OnlyLoadAppFromAsar]: true,
     }),
   ],
+  hooks: {
+    // Packaging edits Info.plist after Electron's ad-hoc signature, which leaves the
+    // signature invalid. macOS drops notifications from apps with an invalid signature,
+    // so the unsigned builds are re-signed ad hoc here (a real Developer ID would replace this).
+    postPackage: async (_config, { platform, outputPaths }) => {
+      if (platform !== 'darwin' || process.platform !== 'darwin') return;
+      for (const dir of outputPaths) {
+        const appPath = path.join(dir, 'Pomodoro.app');
+        execFileSync(
+          'codesign',
+          ['--force', '--deep', '--sign', '-', appPath],
+          { stdio: 'inherit' },
+        );
+        execFileSync('codesign', ['--verify', '--deep', '--strict', appPath], {
+          stdio: 'inherit',
+        });
+      }
+    },
+  },
 };
 
 export default config;

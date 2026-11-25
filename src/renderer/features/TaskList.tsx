@@ -1,4 +1,4 @@
-import { useState, type KeyboardEvent } from 'react';
+import { useRef, useState, type KeyboardEvent } from 'react';
 import { Trash2 } from 'lucide-react';
 import type { Task } from '../../shared/types';
 import { Checkbox } from '@/components/motion/checkbox';
@@ -10,6 +10,24 @@ function TaskRow({ task, active }: { task: Task; active: boolean }) {
   const { tasks, timer } = window.pomodoro;
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(task.title);
+  // A double click also fires two clicks; wait a moment so renaming does not toggle the focus.
+  const clickTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cancelClick = () => {
+    if (clickTimer.current) clearTimeout(clickTimer.current);
+    clickTimer.current = null;
+  };
+  const toggleActive = () => {
+    cancelClick();
+    clickTimer.current = setTimeout(() => {
+      clickTimer.current = null;
+      timer.setActiveTask(active ? null : task.id);
+    }, 250);
+  };
+  const startEditing = () => {
+    cancelClick();
+    setDraft(task.title);
+    setEditing(true);
+  };
 
   const save = async () => {
     const title = draft.trim();
@@ -56,8 +74,10 @@ function TaskRow({ task, active }: { task: Task; active: boolean }) {
           <button
             type="button"
             disabled={task.done}
-            onClick={() => timer.setActiveTask(active ? null : task.id)}
-            onDoubleClick={() => setEditing(true)}
+            onClick={(event) =>
+              event.detail > 1 ? cancelClick() : toggleActive()
+            }
+            onDoubleClick={startEditing}
             title="Clique para focar nesta tarefa. Clique duas vezes para renomear."
             className="block w-full text-left"
           >
